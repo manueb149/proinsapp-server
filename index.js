@@ -1,17 +1,16 @@
-const cors = require("cors");
-const express = require("express");
-const app = express();
-
 global.__basedir = __dirname;
 
-app.use(cors());
+const express = require("express");
+const cors = require("cors");
 
-const initRoutes = require('./routes/index');
+const App = express();
+const port = process.env.PORT || 8080;
 
-app.use(express.urlencoded({ extended: true }));
-initRoutes(app);
+App.use(cors());
+App.use(express.json({extended: true}));
 
-const port = 8080;
+App.use('/api', require('./routes/index'));
+
 app.listen(port, () => {
   console.log(`Running at localhost:${port}`);
 });

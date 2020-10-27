@@ -2,7 +2,7 @@ const uploadFile = require("../middleware/upload");
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
 
-const upload = async (req, res) => {
+exports.upload = async (req, res) => {
     try {
         await uploadFile(req, res);
 
@@ -25,7 +25,7 @@ const upload = async (req, res) => {
     }
 };
 
-const getListFiles = (req, res) => {
+exports.getListFiles = (req, res) => {
 
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
     const baseUrl = "http://localhost:8080/files/"
@@ -50,7 +50,7 @@ const getListFiles = (req, res) => {
     });
 };
 
-const download = (req, res) => {
+exports.download = (req, res) => {
 
     const fileName = req.params.name;
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
@@ -80,7 +80,7 @@ const download = (req, res) => {
     // });
 };
 
-const poliza = (req, res) => {
+exports.poliza = (req, res) => {
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
     const id = req.params.id
     try {
@@ -103,10 +103,3 @@ const poliza = (req, res) => {
         
     }
 }
-
-module.exports = {
-    upload,
-    getListFiles,
-    download,
-    poliza
-};
