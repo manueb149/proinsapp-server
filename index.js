@@ -11,6 +11,6 @@ App.use(express.json({extended: true}));
 
 App.use('/api', require('./routes/index'));
 
-app.listen(port, () => {
+App.listen(port, () => {
   console.log(`Running at localhost:${port}`);
 });

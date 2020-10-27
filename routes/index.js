@@ -22,4 +22,4 @@ router.get(
     controller.poliza
 );
 
-module.exports = routes;
+module.exports = router;

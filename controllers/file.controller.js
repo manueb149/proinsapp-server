@@ -89,7 +89,7 @@ exports.poliza = (req, res) => {
             //handling error
             if (err) {
                 return console.log('Unable to scan directory');
-            } 
+            }
             //listing all files using forEach
             files.forEach(function (file) {
                 // Do whatever you want to do with the file
@@ -100,6 +100,6 @@ exports.poliza = (req, res) => {
             });
         });
     } catch (error) {
-        
+
     }
 }
