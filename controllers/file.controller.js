@@ -46,7 +46,7 @@ exports.getListFiles = (req, res) => {
             });
         });
 
-        res.status(200).send(fileInfos);
+        return res.status(200).send(fileInfos);
     });
 };
 
@@ -95,8 +95,7 @@ exports.poliza = (req, res) => {
                 // Do whatever you want to do with the file
                 const ws = xlsx.parse(`${directoryPath}/${file}`);
                 const index = ws[0].data.findIndex(arr => arr.includes(id));
-                res.status(200).json(ws[0].data[index]);
-                return;
+                return res.status(200).json(ws[0].data[index]);
             });
         });
     } catch (error) {
