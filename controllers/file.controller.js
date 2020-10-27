@@ -28,7 +28,7 @@ exports.upload = async (req, res) => {
 exports.getListFiles = (req, res) => {
 
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
-    const baseUrl = "http://localhost:8080/files/"
+    const baseUrl = "https://young-retreat-94433.herokuapp.com/"
 
     fs.readdir(directoryPath, function (err, files) {
         if (err) {
