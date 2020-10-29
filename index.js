@@ -1,16 +1,26 @@
+//Base directory of workspacce
 global.__basedir = __dirname;
 
+//Initialize libraries
 const express = require("express");
 const cors = require("cors");
+const DBConnect = require('./config/db');
 
+// Connect to database
+DBConnect();
+
+// Create express app and assign port
 const App = express();
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
+// Use cors and json
 App.use(cors());
 App.use(express.json({extended: true}));
 
-App.use('/api', require('./routes/index'));
+// Route for files management
+App.use('/api/files', require('./routes/file.route'));
 
-App.listen(port, () => {
-  console.log(`Running at localhost:${port}`);
+// Start express application
+App.listen(PORT, () => {
+  console.log(`Running at localhost:${PORT}`);
 });
