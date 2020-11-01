@@ -19,6 +19,7 @@ App.use(express.json({extended: true}));
 
 // Route for files management
 App.use('/api/files', require('./routes/file.route'));
+App.use('/api/data', require('./routes/data.route'));
 
 // Start express application
 App.listen(PORT, () => {
