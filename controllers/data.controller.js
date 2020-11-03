@@ -3,11 +3,22 @@ const File = require('../models/file.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
 
-exports.getAllData = async (req, res) => {
+// exports.getAllData = async (req, res) => {
 
-}
+// }
 
 exports.getOneFromData = async (req, res) => {
+    const { id, type } = req.params;
+    console.log(id);
+    try {
+        const result = await Data.findOne({[type]: id})
+        if(!result){
+            return res.status(400).send({message: "El registro no ha sido encontrado"});
+        }
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
+    }
 
 }
 
@@ -48,21 +59,6 @@ exports.uploadData = async (req, res) => {
                 color: "",
                 idArchivo: file.id  
             });
-            // const dataRow = new Data({
-            //     poliza: s0.data[i][0],
-            //     asegurado: s0.data[i][1],
-            //     marca: s0.data[i][4],
-            //     modelo: s0.data[i][5],
-            //     anio: s0.data[i][6],
-            //     chassis: s0.data[i][7],
-            //     placa: s0.data[i][8],
-            //     tipoVehiculo: s0.data[i][9],
-            //     aseguradora,
-            //     plan,
-            //     color: "",
-            //     idArchivo: file.id
-            // });
-            // await dataRow.save();
         }
         if((s0.data.length-5)===count){
             await Data.insertMany(
@@ -72,12 +68,10 @@ exports.uploadData = async (req, res) => {
             file.status = true;
             await file.save();
         }
-        // const index = ws[0].data.findIndex(arr => arr.includes(id));
-        // return res.status(200).json(ws[0].data[index]);
         res.status(200).send({
             message: `Se han cargado ${count} registros correctamente.`
         });
     }catch (error){
-        res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente ${error}` });
+        res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
 }
