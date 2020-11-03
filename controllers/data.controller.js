@@ -11,9 +11,9 @@ exports.getOneFromData = async (req, res) => {
     const { id, type } = req.params;
     console.log(id);
     try {
-        const result = await Data.findOne({[type]: id})
-        if(!result){
-            return res.status(400).send({message: "El registro no ha sido encontrado"});
+        const result = await Data.findOne({ [type]: id })
+        if (!result) {
+            return res.status(400).send({ message: "El registro no ha sido encontrado" });
         }
         res.status(200).send(result);
     } catch (error) {
@@ -27,23 +27,23 @@ exports.uploadData = async (req, res) => {
     const { id } = req.body;
     try {
         const file = await File.findById(id);
-        if(!file){
-            return res.status(500).send({message: "Favor intentar otra vez."});
+        if (!file) {
+            return res.status(500).send({ message: "Favor intentar otra vez." });
         }
-        if(file.status){
-            return res.status(500).send({message: "Los registros de este archivo han sido cargados."});
+        if (file.status) {
+            return res.status(500).send({ message: "Los registros de este archivo han sido cargados." });
         }
         const fileData = file.name.split("_");
-        const aseguradora = fileData[0].replace("-"," ");
-        const plan = fileData[2].slice(0,-5).replace("-"," ");
-        if(!fs.existsSync(directoryPath + file.name)){
-            return res.status(500).send({message: "Archivo no encontrado, favor verificar que está cargado."});
+        const aseguradora = fileData[0].replace("-", " ");
+        const plan = fileData[2].slice(0, -5).replace("-", " ");
+        if (!fs.existsSync(directoryPath + file.name)) {
+            return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado." });
         }
         const ws = xlsx.parse(`${directoryPath}/${file.name}`);
         const s0 = ws[0]
         const doc = [];
         let count = 0;
-        for(let i=5; i<s0.data.length; i++){
+        for (let i = 5; i < s0.data.length; i++) {
             count++;
             doc.push({
                 poliza: s0.data[i][0],
@@ -57,21 +57,25 @@ exports.uploadData = async (req, res) => {
                 aseguradora,
                 plan,
                 color: "",
-                idArchivo: file.id  
+                idArchivo: file.id
             });
         }
-        if((s0.data.length-5)===count){
+        if ((s0.data.length - 5) === count) {
             await Data.insertMany(
                 doc,
-                { ordered: false}
+                { ordered: false }
             );
             file.status = true;
             await file.save();
+            return res.status(200).send({
+                message: `Se han cargado ${count} registros correctamente.`
+            });
+        } else {
+            return res.status(500).send({
+                message: `Intente cargar los registros nuevamente.`
+            });
         }
-        res.status(200).send({
-            message: `Se han cargado ${count} registros correctamente.`
-        });
-    }catch (error){
+    } catch (error) {
         res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
 }
