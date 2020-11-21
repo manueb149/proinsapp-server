@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const DataSchema =  mongoose.Schema({
+const FileDataSchema =  mongoose.Schema({
     poliza: {
         type: String,
+        trim: true,
         required: true,
     },
     asegurado: {
@@ -75,4 +76,4 @@ const DataSchema =  mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Data', DataSchema);
+module.exports = mongoose.model('FileData', FileDataSchema);

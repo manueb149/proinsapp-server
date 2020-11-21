@@ -1,0 +1,78 @@
+const Data = require('../models/truckData.model');
+const Truck = require('../models/truck.model');
+const xlsx = require('node-xlsx').default;
+const fs = require('fs');
+
+// exports.getAllData = async (req, res) => {
+
+// }
+
+exports.getOneFromData = async (req, res) => {
+    // const { id, type } = req.params;
+    try {
+        // const result = await Data.findOne({ [type]: id })
+        // if (!result) {
+        //     return res.status(400).send({ message: "El registro no ha sido encontrado" });
+        // }
+        res.status(200).send({result: "getOneFromData"});
+    } catch (error) {
+        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
+    }
+
+}
+
+exports.uploadData = async (req, res) => {
+    const directoryPath = __basedir + "/resources/static/assets/uploads/";
+    const { id } = req.body;
+    try {
+        const trucks = await Truck.findById(id);
+        if (!trucks) {
+            return res.status(500).send({ message: "Favor intentar otra vez." });
+        }
+        if (trucks.status) {
+            return res.status(500).send({ message: "Los registros de este archivo han sido cargados." });
+        }
+        if (!fs.existsSync(directoryPath + trucks.name)) {
+            return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado." });
+        }
+        const woorkbook = xlsx.parse(`${directoryPath}/${trucks.name}`);
+        // const s0 = ws[0]
+        // const doc = [];
+        // let count = 0;
+        // for (let i = 5; i < s0.data.length; i++) {
+        //     count++;
+        //     doc.push({
+        //         poliza: s0.data[i][0],
+        //         asegurado: s0.data[i][1],
+        //         marca: s0.data[i][4],
+        //         modelo: s0.data[i][5],
+        //         anio: s0.data[i][6],
+        //         chassis: s0.data[i][7],
+        //         placa: s0.data[i][8],
+        //         tipoVehiculo: s0.data[i][9],
+        //         aseguradora,
+        //         plan,
+        //         color: "",
+        //         idArchivo: file.id
+        //     });
+        // }
+        // if ((s0.data.length - 5) === count) {
+        //     await Data.insertMany(
+        //         doc,
+        //         { ordered: false }
+        //     );
+        //     file.status = true;
+        //     await file.save();
+        //     return res.status(200).send({
+        //         message: `Se han cargado ${count} registros correctamente.`
+        //     });
+        // } else {
+        //     return res.status(500).send({
+        //         message: `Intente cargar los registros nuevamente.`
+        //     });
+        // }
+        res.status(200).json(woorkbook)
+    } catch (error) {
+        res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
+    }
+}

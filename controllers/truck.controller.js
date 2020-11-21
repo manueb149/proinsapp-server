@@ -1,10 +1,10 @@
 const uploadFile = require("../middleware/upload");
-const File = require('../models/file.model');
-const Data = require('../models/fileData.model');
+const Truck = require('../models/truck.model');
+// const Data = require('../models/data.model');
 const fs = require('fs');
 
 // Controller to upload files
-exports.uploadFile = async (req, res) => {
+exports.uploadTrucks = async (req, res) => {
     try {
         await uploadFile(req, res);
         const fileName = req.file.originalname;
@@ -13,18 +13,18 @@ exports.uploadFile = async (req, res) => {
             return res.status(400).json({ message: "Porfavor, carge un archivo!" });
         }
 
-        let file = await File.findOne({ name: fileName });
+        let file = await Truck.findOne({ name: fileName });
         if(file){
-            return res.status(500).json({ message: "El archivo ya existe." })
+           return res.status(500).json({ message: "El archivo ya existe." })
         }
-        file = new File({
+        truck = new Truck({
             name: fileName
         });
-        await file.save();
+        await truck.save();
 
         res.status(200).json({
             message: "Se ha cargado el archivo: " + fileName,
-            file
+            truck
         });
 
     } catch (err) {
@@ -39,36 +39,36 @@ exports.uploadFile = async (req, res) => {
     }
 };
 
-exports.getFiles = async (req, res) => {
+exports.getTrucks = async (req, res) => {
     try {
-        let files = await File.find();
-        if(!files){
+        let trucks = await Truck.find();
+        if(!trucks){
             return res.status(500).json({ message: "No hay archivos cargados."});
         }
-        res.status(200).json(files);
+        res.status(200).json(trucks);
     } catch (error) {
         res.status(500).json({ message: "No se pudo obtener los archivos, intentelo nuevamente." });
     }
 };
 
-exports.deleteFile = async (req, res) => {
+exports.deleteTruck = async (req, res) => {
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
     const id = req.params.id;
     try {
-        let file = await File.findById(id);
-        if(!file){
+        let truck = await Truck.findById(id);
+        if(!truck){
             return res.status(404).json({ message: 'Archivo no encontrado.'})
         }
-        fs.unlink(directoryPath + file.name, async function(err){
+        fs.unlink(directoryPath + truck.name, async function(err){
             if(err) return res.status(500).json({ message: `No se pudo borrar el archivo, intentelo nuevamente. ${err}` });
-            await File.findOneAndRemove({ _id: id });
-            const del = await Data.deleteMany({ idArchivo: id })
+            await Truck.findOneAndRemove({ _id: id });
+            // const del = await Data.deleteMany({ idArchivo: id })
             return res.status(200).json({
-                message: `Archivo ${file.name} y ${del.deletedCount} registros eliminados`,
-                file
+                message: `Archivo ${truck.name} eliminado`,
+                truck
             });
         }); 
     } catch (error) {
-        res.status(500).json({ message: "No se borrar el archivo, intentelo nuevamente." });
+        res.status(500).json({ message: "No se pudo borrar el archivo, intentelo nuevamente." });
     }
 }

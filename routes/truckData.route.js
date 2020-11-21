@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const controller = require("../controllers/data.controller");
+const controller = require("../controllers/truckData.controller");
 
 // router.get(
 //     "/",

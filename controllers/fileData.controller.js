@@ -1,4 +1,4 @@
-const Data = require('../models/data.model');
+const Data = require('../models/fileData.model');
 const File = require('../models/file.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
@@ -9,7 +9,6 @@ const fs = require('fs');
 
 exports.getOneFromData = async (req, res) => {
     const { id, type } = req.params;
-    console.log(id);
     try {
         const result = await Data.findOne({ [type]: id })
         if (!result) {
