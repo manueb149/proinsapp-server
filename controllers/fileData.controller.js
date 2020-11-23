@@ -60,15 +60,19 @@ exports.uploadData = async (req, res) => {
             });
         }
         if ((s0.data.length - 5) === count) {
-            await Data.insertMany(
-                doc,
-                { ordered: false }
-            );
+            await Data.insertMany(doc,{ ordered: false })
+            .then(result => {
+                return res.status(200).send({
+                    message: `Se han cargado ${count} registros correctamente.`
+                });
+            })
+            .catch( err => {
+                return res.status(400).send({
+                    message: `Algo está mal con el archivo, intente cargar los registros nuevamente. ${err}`
+                });
+            })
             file.status = true;
             await file.save();
-            return res.status(200).send({
-                message: `Se han cargado ${count} registros correctamente.`
-            });
         } else {
             return res.status(500).send({
                 message: `Intente cargar los registros nuevamente.`

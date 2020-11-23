@@ -1,6 +1,6 @@
 const uploadFile = require("../middleware/upload");
 const Truck = require('../models/truck.model');
-// const Data = require('../models/data.model');
+const truckData = require('../models/truckData.model');
 const fs = require('fs');
 
 // Controller to upload files
@@ -55,16 +55,16 @@ exports.deleteTruck = async (req, res) => {
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
     const id = req.params.id;
     try {
-        let truck = await Truck.findById(id);
+        const truck = await Truck.findById(id);
         if(!truck){
             return res.status(404).json({ message: 'Archivo no encontrado.'})
         }
         fs.unlink(directoryPath + truck.name, async function(err){
             if(err) return res.status(500).json({ message: `No se pudo borrar el archivo, intentelo nuevamente. ${err}` });
             await Truck.findOneAndRemove({ _id: id });
-            // const del = await Data.deleteMany({ idArchivo: id })
+            const del = await truckData.deleteMany({ idArchivo: id })
             return res.status(200).json({
-                message: `Archivo ${truck.name} eliminado`,
+                message: `Archivo ${truck.name} y ${del.deletedCount} registros eliminados`,
                 truck
             });
         }); 

@@ -1,4 +1,4 @@
-const Data = require('../models/truckData.model');
+const truckData = require('../models/truckData.model');
 const Truck = require('../models/truck.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
@@ -14,7 +14,7 @@ exports.getOneFromData = async (req, res) => {
         // if (!result) {
         //     return res.status(400).send({ message: "El registro no ha sido encontrado" });
         // }
-        res.status(200).send({result: "getOneFromData"});
+        res.status(200).send({ result: "getOneFromData" });
     } catch (error) {
         res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
@@ -25,53 +25,90 @@ exports.uploadData = async (req, res) => {
     const directoryPath = __basedir + "/resources/static/assets/uploads/";
     const { id } = req.body;
     try {
-        const trucks = await Truck.findById(id);
-        if (!trucks) {
+        let truck = await Truck.findById(id);
+        if (!truck) {
             return res.status(500).send({ message: "Favor intentar otra vez." });
         }
-        if (trucks.status) {
+        if (truck.status) {
             return res.status(500).send({ message: "Los registros de este archivo han sido cargados." });
         }
-        if (!fs.existsSync(directoryPath + trucks.name)) {
+        if (!fs.existsSync(directoryPath + truck.name)) {
             return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado." });
         }
-        const woorkbook = xlsx.parse(`${directoryPath}/${trucks.name}`);
-        // const s0 = ws[0]
-        // const doc = [];
-        // let count = 0;
-        // for (let i = 5; i < s0.data.length; i++) {
-        //     count++;
-        //     doc.push({
-        //         poliza: s0.data[i][0],
-        //         asegurado: s0.data[i][1],
-        //         marca: s0.data[i][4],
-        //         modelo: s0.data[i][5],
-        //         anio: s0.data[i][6],
-        //         chassis: s0.data[i][7],
-        //         placa: s0.data[i][8],
-        //         tipoVehiculo: s0.data[i][9],
-        //         aseguradora,
-        //         plan,
-        //         color: "",
-        //         idArchivo: file.id
-        //     });
-        // }
-        // if ((s0.data.length - 5) === count) {
-        //     await Data.insertMany(
-        //         doc,
-        //         { ordered: false }
-        //     );
-        //     file.status = true;
-        //     await file.save();
-        //     return res.status(200).send({
-        //         message: `Se han cargado ${count} registros correctamente.`
-        //     });
-        // } else {
-        //     return res.status(500).send({
-        //         message: `Intente cargar los registros nuevamente.`
-        //     });
-        // }
-        res.status(200).json(woorkbook)
+        const doc = [];
+        let count = 0;
+        const wb = xlsx.parse(`${directoryPath}/${truck.name}`);
+        for (let i = 0; i < wb.length; i++) {
+            const wbData = wb[i].data;
+            for (let j = 4; j < wbData.length; j++) {
+                if (wbData[j].length > 0) {
+                    if (wbData[j][0] === '*') {
+                        j += 3;
+                    } else if (wb[i].name.toUpperCase() === 'ASISTENCIAS') {
+                        doc.push({
+                            region: String(wb[i].name),
+                            gruaDeServicio: String(wbData[j][2] || '-'),
+                            area: String(wbData[j][1] || '-'),
+                            telOficina: String(wbData[j][3] || '-') ,
+                            telCelular: '-',
+                            gruero: '-',
+                            direccion: '-',
+                            alcance: String(wbData[j][0] || '-'),
+                            contacto: '-',
+                            transferencia: '-',
+                            banco: '-',
+                            tipoCuenta: '-',
+                            numeroCuenta: '-',
+                            nombreCuenta: '-',
+                            cedula: '-',
+                            fechaNacimiento: '-',
+                            idArchivo: truck.id
+                        });
+                        count++;
+                    } else {
+                        doc.push({
+                            region: wb[i].name,
+                            gruaDeServicio: String(wbData[j][0] || '-'),
+                            area: String(wbData[j][1] || '-'),
+                            telOficina: String(wbData[j][2] || '-'),
+                            telCelular: String(wbData[j][3] || '-'),
+                            gruero: String(wbData[j][4] || '-'),
+                            direccion: String(wbData[j][5] || '-'),
+                            alcance: String(wbData[j][6] || '-'),
+                            contacto: String(wbData[j][7] || '-'),
+                            transferencia: String(wbData[j][8] || '-'),
+                            banco: String(wbData[j][9] || '-'),
+                            tipoCuenta: String(wbData[j][10] || '-'),
+                            numeroCuenta: String(wbData[j][11] || '-'),
+                            nombreCuenta: String(wbData[j][12] || '-'),
+                            cedula: String(wbData[j][13] || '-'),
+                            fechaNacimiento: String(wbData[j][14] || '-'),
+                            idArchivo: truck.id
+                        });
+                        count++;
+                    }
+                }
+            }
+        }
+        if (doc.length > 0) {
+            await truckData.insertMany(doc, { ordered: false })
+            .then(result => {
+                return res.status(200).send({
+                    message: `Se han cargado ${count} registros correctamente.`
+                });
+            })
+            .catch( err => {
+                return res.status(400).send({
+                    message: `Algo está mal con el archivo, intente cargar los registros nuevamente. ${err}`
+                });
+            })
+            truck.status = true;
+            await truck.save();
+        } else {
+            return res.status(400).send({
+                message: `Algo está mal con el archivo, intente cargar los registros nuevamente.`
+            });
+        }
     } catch (error) {
         res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
