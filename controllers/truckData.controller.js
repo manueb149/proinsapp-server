@@ -1,4 +1,5 @@
 const truckData = require('../models/truckData.model');
+const truckArea = require('../models/truckArea.model');
 const Truck = require('../models/truck.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
@@ -36,10 +37,12 @@ exports.uploadData = async (req, res) => {
             return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado." });
         }
         const doc = [];
+        const areas = []
         let count = 0;
         const wb = xlsx.parse(`${directoryPath}/${truck.name}`);
         for (let i = 0; i < wb.length; i++) {
             const wbData = wb[i].data;
+            areas.push(String(wb[i].name));
             for (let j = 4; j < wbData.length; j++) {
                 if (wbData[j].length > 0) {
                     if (wbData[j][0] === '*') {
@@ -102,6 +105,10 @@ exports.uploadData = async (req, res) => {
                     message: `Algo está mal con el archivo, intente cargar los registros nuevamente. ${err}`
                 });
             })
+            const TruckAreas = new truckArea({
+                areas: areas
+            })
+            await TruckAreas.save();
             truck.status = true;
             await truck.save();
         } else {
