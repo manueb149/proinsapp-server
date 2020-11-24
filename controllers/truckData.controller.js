@@ -42,7 +42,7 @@ exports.uploadData = async (req, res) => {
         const wb = xlsx.parse(`${directoryPath}/${truck.name}`);
         for (let i = 0; i < wb.length; i++) {
             const wbData = wb[i].data;
-            areas.push(String(wb[i].name));
+            areas.push(String(wb[i].name).trim().toUpperCase());
             for (let j = 4; j < wbData.length; j++) {
                 if (wbData[j].length > 0) {
                     if (wbData[j][0] === '*') {
