@@ -4,22 +4,31 @@ const Truck = require('../models/truck.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
 
-// exports.getAllData = async (req, res) => {
-
-// }
-
-exports.getOneFromData = async (req, res) => {
-    // const { id, type } = req.params;
+exports.getAllData = async (req, res) => {
     try {
-        // const result = await Data.findOne({ [type]: id })
-        // if (!result) {
-        //     return res.status(400).send({ message: "El registro no ha sido encontrado" });
-        // }
-        res.status(200).send({ result: "getOneFromData" });
+        let result;
+        if(req.body.region){
+            result = await truckData.find(req.body).exec();
+        }else{
+            result = await truckData.find();
+        }
+        res.status(200).send(result);
     } catch (error) {
-        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
+        res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
+}
 
+exports.getAreas = async (req, res) => {
+    try {
+        const truckAreas = await truckArea.findOne({ name: 'areas' });
+        if(truckAreas){
+           return res.status(200).send({ areas: truckAreas.areas }) 
+        }else{
+            return res.status(200).send({ areas: [] }) 
+        }
+    } catch (error) {
+        
+    }
 }
 
 exports.uploadData = async (req, res) => {
@@ -95,22 +104,27 @@ exports.uploadData = async (req, res) => {
         }
         if (doc.length > 0) {
             await truckData.insertMany(doc, { ordered: false })
-            .then(result => {
-                return res.status(200).send({
-                    message: `Se han cargado ${count} registros correctamente.`
-                });
-            })
+            .then(result => {})
             .catch( err => {
                 return res.status(400).send({
-                    message: `Algo está mal con el archivo, intente cargar los registros nuevamente. ${err}`
+                    message: `Algo está mal con el archivo, intente cargar los registros nuevamente.`
                 });
             })
-            const TruckAreas = new truckArea({
-                areas: areas
-            })
-            await TruckAreas.save();
+            let truckAreas = await truckArea.findOne({ name: 'areas' });
+            if(truckAreas){
+               truckAreas.areas = areas;
+               await truckAreas.save();
+            }else{
+                truckAreas = new truckArea({
+                    areas: areas
+                })
+                await truckAreas.save();
+            }
             truck.status = true;
             await truck.save();
+            res.status(200).send({
+                message: `Se han cargado ${count} registros correctamente.`
+            });
         } else {
             return res.status(400).send({
                 message: `Algo está mal con el archivo, intente cargar los registros nuevamente.`

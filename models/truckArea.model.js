@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const TruckAreaSchema =  mongoose.Schema({
+    name: {
+        type: String,
+        default: "areas"
+    },
     areas: {
         type: [],
         required: true,

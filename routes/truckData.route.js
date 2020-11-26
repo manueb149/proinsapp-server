@@ -1,14 +1,14 @@
 const router = require("express").Router();
 const controller = require("../controllers/truckData.controller");
 
-// router.get(
-//     "/",
-//     controller.getAllData
-// );
-
 router.get(
-    "/:type/:id",
-    controller.getOneFromData
+    "/areas",
+    controller.getAreas  
+);
+
+router.post(
+    "/",
+    controller.getAllData
 );
 
 router.post(
