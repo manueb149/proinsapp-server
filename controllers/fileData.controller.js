@@ -30,7 +30,7 @@ exports.uploadData = async (req, res) => {
             return res.status(500).send({ message: "Favor intentar otra vez." });
         }
         if (file.status) {
-            return res.status(500).send({ message: "Los registros de este archivo han sido cargados." });
+            return res.status(500).send({ message: "Los registros de este archivo ya han sido cargados." });
         }
         const fileData = file.name.split("_");
         const aseguradora = fileData[0].replace("-", " ");
