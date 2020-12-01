@@ -60,7 +60,7 @@ exports.deleteTruck = async (req, res) => {
             return res.status(404).json({ message: 'Archivo no encontrado.'})
         }
         fs.unlink(directoryPath + truck.name, async function(err){
-            if(err) return res.status(500).json({ message: `No se pudo borrar el archivo, intentelo nuevamente. ${err}` });
+            // if(err) return res.status(500).json({ message: `No se pudo borrar el archivo, intentelo nuevamente. ${err}` });
             await Truck.findOneAndRemove({ _id: id });
             const del = await truckData.deleteMany({ idArchivo: id })
             return res.status(200).json({
