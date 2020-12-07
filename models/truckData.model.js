@@ -1,5 +1,3 @@
-const moment = require('moment-timezone');
-const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 const mongoose = require('mongoose');
 
 const TruckDataSchema = mongoose.Schema({
@@ -100,7 +98,7 @@ const TruckDataSchema = mongoose.Schema({
     },
     registry: {
         type: Date,
-        default: dateSD
+        default: Date.now()
     },
     idArchivo: {
         type: String,

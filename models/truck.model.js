@@ -1,5 +1,3 @@
-const moment = require('moment-timezone');
-const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 const mongoose = require('mongoose');
 
 const TruckSchema =  mongoose.Schema({

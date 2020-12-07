@@ -1,5 +1,3 @@
-const moment = require('moment-timezone');
-const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 const mongoose = require('mongoose');
 
 const ServiceSchema =  mongoose.Schema({
@@ -132,7 +130,7 @@ const ServiceSchema =  mongoose.Schema({
     },
     registry: {
         type: Date,
-        default: dateSD
+        default: Date.now()
     },
 });
 
