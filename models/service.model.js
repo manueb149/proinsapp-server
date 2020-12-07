@@ -2,7 +2,7 @@ const moment = require('moment-timezone');
 const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 const mongoose = require('mongoose');
 
-const FileDataSchema =  mongoose.Schema({
+const ServiceSchema =  mongoose.Schema({
     poliza: {
         type: String,
         trim: true,
@@ -72,15 +72,68 @@ const FileDataSchema =  mongoose.Schema({
         trim: true,
         uppercase: true
     },
+    ubicacion: {
+        type: String,
+        trim: true,
+        uppercase: true
+    },
+    destino: {
+        type: String,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    comentarioGruero: {
+        type: String,
+        trim: true,
+        uppercase: true
+    },
+    dia: {
+        type: String,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    tiempoGrua: {
+        type: Number,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    tiempoCliente: {
+        type: Number,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    distancia: {
+        type: Number,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    precio: {
+        type: Number,
+        required: true,
+        trim: true,
+        uppercase: true
+    },
+    datosGruero: {
+        type: Object,
+        default: {}
+    },
+    tipoServicios: {
+        type: Object,
+        default: {}
+    },
+    DetalleSiniestro: {
+        type: Object,
+        default: {}
+    },
     registry: {
         type: Date,
         default: dateSD
     },
-    idArchivo: {
-        type: String,
-        required: true,
-        trim: true,
-    }
 });
 
-module.exports = mongoose.model('FileData', FileDataSchema);
+module.exports = mongoose.model('Service', ServiceSchema);

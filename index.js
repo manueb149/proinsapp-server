@@ -22,6 +22,7 @@ App.use('/api/files', require('./routes/file.route'));
 App.use('/api/data', require('./routes/fileData.route'));
 App.use('/api/trucks', require('./routes/truck.route'));
 App.use('/api/trucksData', require('./routes/truckData.route'));
+App.use('/api/service', require('./routes/service.route'));
 
 // Start express application
 App.listen(PORT, () => {

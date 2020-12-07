@@ -3,10 +3,6 @@ const File = require('../models/file.model');
 const xlsx = require('node-xlsx').default;
 const fs = require('fs');
 
-// exports.getAllData = async (req, res) => {
-
-// }
-
 exports.getOneFromData = async (req, res) => {
     const { id, type } = req.params;
     try {
@@ -35,49 +31,83 @@ exports.uploadData = async (req, res) => {
         const fileData = file.name.split("_");
         const aseguradora = fileData[0].replace("-", " ");
         const plan = fileData[2].slice(0, -5).replace("-", " ");
+
         if (!fs.existsSync(directoryPath + file.name)) {
-            return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado." });
+            return res.status(500).send({ message: "Archivo no encontrado, favor verificar que está cargado o eliminar el actual y volver a cargarlo." });
         }
         const ws = xlsx.parse(`${directoryPath}/${file.name}`);
-        const s0 = ws[0]
+        const s0 = ws[0];
         const doc = [];
+        const doc2 = [];
         let count = 0;
-        for (let i = 5; i < s0.data.length; i++) {
-            count++;
-            doc.push({
-                poliza: s0.data[i][0],
-                asegurado: s0.data[i][1],
-                marca: s0.data[i][4],
-                modelo: s0.data[i][5],
-                anio: s0.data[i][6],
-                chassis: s0.data[i][7],
-                placa: s0.data[i][8],
-                tipoVehiculo: s0.data[i][9],
-                aseguradora,
-                plan,
-                color: "",
-                idArchivo: file.id
+        if (aseguradora.toUpperCase().trim() === 'FIHOGAR') {
+            const s1 = ws[1]
+            for (let i = 2; i < s0.data.length; i++) {
+                if (s0.data[i][1]) {
+                    count++;
+                    doc.push({
+                        poliza: '-',
+                        cedula: String(s0.data[i][2] || '-').replace(/\-/g, ""),
+                        asegurado: String(s0.data[i][1] || '-'),
+                        marca: String(s0.data[i][8] || '-'),
+                        modelo: String(s0.data[i][9] || '-'),
+                        anio: String(s0.data[i][10] || '-'),
+                        chassis: String(s0.data[i][7] || '-'),
+                        placa: '-',
+                        tipoVehiculo: '-',
+                        aseguradora: String(s0.data[i][5] || '-'),
+                        plan: "-",
+                        color: "",
+                        idArchivo: file.id
+                    });
+                }
+            }
+        } else if (aseguradora.toUpperCase().trim() === 'LA INTERNACIONAL') {
+            for (let i = 5; i < s0.data.length; i++) {
+                if (s0.data[i][1]) {
+                    count++;
+                    doc.push({
+                        poliza: String(s0.data[i][0] || '-'),
+                        cedula: "-",
+                        asegurado: String(s0.data[i][1] || '-'),
+                        marca: String(s0.data[i][4] || '-'),
+                        modelo: String(s0.data[i][5] || '-'),
+                        anio: String(s0.data[i][6] || '-'),
+                        chassis: String(s0.data[i][7] || '-'),
+                        placa: String(s0.data[i][8] || '-'),
+                        tipoVehiculo: String(s0.data[i][9] || '-'),
+                        aseguradora,
+                        plan,
+                        color: "",
+                        idArchivo: file.id
+                    });
+                }
+            }
+        } else {
+            return res.status(500).send({
+                message: `Favor revisar el formato del nombre del archivo.`
             });
         }
-        if ((s0.data.length - 5) === count) {
-            await Data.insertMany(doc,{ ordered: false })
+
+        await Data.insertMany(doc, { ordered: false })
             .then(result => {
                 return res.status(200).send({
-                    message: `Se han cargado ${count} registros correctamente.`
+                    message: `Se han cargado ${count} registros correctamente.`,
+                    doc,
+                    len: doc.length,
+                    s0,
+                    len2: s0.data.length,
+                    fileData
                 });
             })
-            .catch( err => {
+            .catch(err => {
                 return res.status(400).send({
                     message: `Algo está mal con el archivo, intente cargar los registros nuevamente. ${err}`
                 });
             })
-            file.status = true;
-            await file.save();
-        } else {
-            return res.status(500).send({
-                message: `Intente cargar los registros nuevamente.`
-            });
-        }
+        file.status = true;
+        await file.save();
+
     } catch (error) {
         res.status(500).json({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
