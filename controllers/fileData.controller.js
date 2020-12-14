@@ -55,8 +55,8 @@ exports.uploadData = async (req, res) => {
                         chassis: String(s0.data[i][7] || '-'),
                         placa: '-',
                         tipoVehiculo: '-',
-                        aseguradora: String(s0.data[i][5] || '-'),
-                        plan: "-",
+                        aseguradora,
+                        plan: String(s0.data[i][5] || '-'),
                         color: "",
                         idArchivo: file.id
                     });

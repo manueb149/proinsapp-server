@@ -11,7 +11,7 @@ exports.getReports = async (req, res) => {
 
 exports.createReport = async (req, res) => {
     try {
-        const { data, singleSelection, detailSinister, servicesType } = req.body
+        const { data, dataTrucks, detailSinister, servicesType } = req.body
 
         const newService = new Service({
             poliza: data.poliza,
@@ -34,7 +34,7 @@ exports.createReport = async (req, res) => {
             tiempoCliente: data.tiempoCliente,
             distancia: data.distancia,
             precio: data.precio,
-            datosGruero: singleSelection[0],
+            datosGruero: dataTrucks[0],
             DetalleSiniestro: detailSinister,
             tipoServicios: servicesType
 
