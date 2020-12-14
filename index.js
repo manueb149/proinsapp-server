@@ -23,6 +23,7 @@ App.use('/api/data', require('./routes/fileData.route'));
 App.use('/api/trucks', require('./routes/truck.route'));
 App.use('/api/trucksData', require('./routes/truckData.route'));
 App.use('/api/service', require('./routes/service.route'));
+App.use('/api/values', require('./routes/defaulValues.route'));
 
 // Start express application
 App.listen(PORT, () => {

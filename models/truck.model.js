@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 
 const TruckSchema =  mongoose.Schema({
     name: {
@@ -12,8 +14,8 @@ const TruckSchema =  mongoose.Schema({
         default: false
     },
     registry: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        default: dateSD.toLocaleString()
     }
 });
 

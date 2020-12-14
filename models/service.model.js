@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 
 const ServiceSchema =  mongoose.Schema({
     poliza: {
@@ -129,9 +131,9 @@ const ServiceSchema =  mongoose.Schema({
         default: {}
     },
     registry: {
-        type: Date,
-        default: Date.now()
-    },
+        type: String,
+        default: dateSD.toLocaleString()
+    }
 });
 
 module.exports = mongoose.model('Service', ServiceSchema);

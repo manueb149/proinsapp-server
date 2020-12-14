@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const moment = require('moment-timezone');
+const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 
 const TruckDataSchema = mongoose.Schema({
     region: {
@@ -96,16 +98,15 @@ const TruckDataSchema = mongoose.Schema({
         trim: true,
         uppercase: true
     },
-    registry: {
-        type: Date,
-        default: Date.now()
-    },
     idArchivo: {
         type: String,
         required: true,
         trim: true,
+    },
+    registry: {
+        type: String,
+        default: dateSD.toLocaleString()
     }
-
 });
 
 module.exports = mongoose.model('TruckData', TruckDataSchema)
