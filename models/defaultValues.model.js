@@ -77,6 +77,16 @@ const DefaultValuesSchema = mongoose.Schema({
             type: String,
             required: true,
             default: 0
+        },
+        TN: {
+            type: String,
+            required: true,
+            default: 0
+        },
+        FF: {
+            type: String,
+            required: true,
+            default: 0
         }
     },
     registry: {

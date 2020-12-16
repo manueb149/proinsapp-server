@@ -6,7 +6,7 @@ const fs = require('fs');
 exports.getOneFromData = async (req, res) => {
     const { id, type } = req.params;
     try {
-        const result = await Data.findOne({ [type]: id })
+        const result = await Data.find({ [type]: id })
         if (!result) {
             return res.status(400).send({ message: "El registro no ha sido encontrado" });
         }

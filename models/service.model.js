@@ -72,6 +72,16 @@ const ServiceSchema =  mongoose.Schema({
         trim: true,
         uppercase: true
     },
+    infoSin: {
+        type: String,
+        trim: true,
+        uppercase: true
+    },
+    estadoV: {
+        type: String,
+        trim: true,
+        uppercase: true
+    },
     ubicacion: {
         type: String,
         trim: true,
@@ -114,7 +124,7 @@ const ServiceSchema =  mongoose.Schema({
     },
     precio: {
         type: Number,
-        required: true,
+        // required: true,
         trim: true,
         uppercase: true
     },
@@ -126,13 +136,17 @@ const ServiceSchema =  mongoose.Schema({
         type: Object,
         default: {}
     },
-    DetalleSiniestro: {
+    detalleSiniestro: {
+        type: Object,
+        default: {}
+    },
+    fechaSiniestro: {
         type: Object,
         default: {}
     },
     registry: {
         type: String,
-        default: dateSD.toLocaleString()
+        default: dateSD.toLocaleString('en-DO', { timeZone: 'UTC' })
     }
 });
 

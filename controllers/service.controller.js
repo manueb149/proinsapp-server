@@ -11,7 +11,7 @@ exports.getReports = async (req, res) => {
 
 exports.createReport = async (req, res) => {
     try {
-        const { data, dataTrucks, detailSinister, servicesType } = req.body
+        const { data, dataTrucks, detailSinister, servicesType, selectedDate } = req.body;
 
         const newService = new Service({
             poliza: data.poliza,
@@ -35,8 +35,9 @@ exports.createReport = async (req, res) => {
             distancia: data.distancia,
             precio: data.precio,
             datosGruero: dataTrucks[0],
-            DetalleSiniestro: detailSinister,
-            tipoServicios: servicesType
+            detalleSiniestro: detailSinister,
+            tipoServicios: servicesType,
+            fechaSiniestro: selectedDate
 
         });
 
@@ -44,7 +45,7 @@ exports.createReport = async (req, res) => {
         
         res.status(200).send({ message: `Servicio guardado!`, newService });
     } catch (error) {
-        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
+        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente. ${error}` });
     }
 }
 
