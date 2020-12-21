@@ -19,6 +19,18 @@ const ServiceSchema =  mongoose.Schema({
         trim: true,
         uppercase: true
     },
+    telAseg1: {
+        type: String,
+        trim: true,
+        default: "",
+        uppercase: true
+    },
+    telAseg2: {
+        type: String,
+        trim: true,
+        default: "",
+        uppercase: true
+    },
     marca: {
         type: String,
         required: true,
@@ -104,6 +116,10 @@ const ServiceSchema =  mongoose.Schema({
         trim: true,
         uppercase: true
     },
+    noche: {
+        type: Boolean,
+        default: false
+    },
     tiempoGrua: {
         type: Number,
         required: true,
@@ -124,7 +140,7 @@ const ServiceSchema =  mongoose.Schema({
     },
     precio: {
         type: Number,
-        // required: true,
+        required: true,
         trim: true,
         uppercase: true
     },
@@ -143,6 +159,12 @@ const ServiceSchema =  mongoose.Schema({
     fechaSiniestro: {
         type: Object,
         default: {}
+    },
+    user: {
+        type: String,
+        trim: true,
+        required: true,
+        uppercase: true
     },
     registry: {
         type: String,

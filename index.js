@@ -24,6 +24,8 @@ App.use('/api/trucks', require('./routes/truck.route'));
 App.use('/api/trucksData', require('./routes/truckData.route'));
 App.use('/api/service', require('./routes/service.route'));
 App.use('/api/values', require('./routes/defaulValues.route'));
+App.use('/api/user', require('./routes/user.route'));
+App.use('/api/auth', require('./routes/auth.route'));
 
 // Start express application
 App.listen(PORT, () => {
