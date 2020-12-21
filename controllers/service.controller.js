@@ -40,7 +40,8 @@ exports.createReport = async (req, res) => {
             datosGruero: dataTrucks[0],
             detalleSiniestro: { detailSinister, detailSinisterCk },
             tipoServicios: { servicesType, servicesTypeCk },
-            fechaSiniestro: selectedDate
+            fechaSiniestro: data.fechaSiniestro,
+            user: data.user
 
         });
 
@@ -48,6 +49,7 @@ exports.createReport = async (req, res) => {
 
         res.status(200).send({ message: `Servicio guardado!`, newService });
     } catch (error) {
+        console.log(error);
         res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente. ${error}` });
     }
 }
