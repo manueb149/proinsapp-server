@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const moment = require('moment-timezone');
 const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
+const Float = require('mongoose-float').loadType(mongoose);
 
 const ServiceSchema =  mongoose.Schema({
     serviceNo: Number,
@@ -141,10 +142,14 @@ const ServiceSchema =  mongoose.Schema({
         uppercase: true
     },
     precio: {
-        type: Number,
+        type: Float,
         required: true,
         trim: true,
         uppercase: true
+    },
+    tarifaEspecial: {
+        type: Float,
+        default: 0
     },
     datosGruero: {
         type: Object,

@@ -98,6 +98,11 @@ const TruckDataSchema = mongoose.Schema({
         trim: true,
         uppercase: true
     },
+    trasporteGrua:{
+        type: String,
+        trim: true,
+        default: "40"
+    }, 
     idArchivo: {
         type: String,
         required: true,

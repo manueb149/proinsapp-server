@@ -37,6 +37,7 @@ exports.createReport = async (req, res) => {
             tiempoCliente: data.tiempoCliente,
             distancia: data.distancia,
             precio: data.precio,
+            tarifaEspecial: data.tarifaEspecial,
             datosGruero: dataTrucks[0],
             detalleSiniestro: { detailSinister, detailSinisterCk },
             tipoServicios: { servicesType, servicesTypeCk },

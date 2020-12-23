@@ -74,6 +74,7 @@ exports.uploadData = async (req, res) => {
                             nombreCuenta: '-',
                             cedula: '-',
                             fechaNacimiento: '-',
+                            trasporteGrua: '-',
                             idArchivo: truck.id
                         });
                         count++;
@@ -95,6 +96,7 @@ exports.uploadData = async (req, res) => {
                             nombreCuenta: String(wbData[j][12] || '-'),
                             cedula: String(wbData[j][13] || '-'),
                             fechaNacimiento: String(wbData[j][14] || '-'),
+                            trasporteGrua: String(wbData[j][15] || '-'),
                             idArchivo: truck.id
                         });
                         count++;
