@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const moment = require('moment-timezone');
 const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 
 const ServiceSchema =  mongoose.Schema({
+    serviceNo: Number,
     poliza: {
         type: String,
         trim: true,
@@ -171,5 +173,5 @@ const ServiceSchema =  mongoose.Schema({
         default: dateSD.toLocaleString('en-DO', { timeZone: 'UTC' })
     }
 });
-
+ServiceSchema.plugin(AutoIncrement, {inc_field: 'serviceNo', start_seq: 1000000});
 module.exports = mongoose.model('Service', ServiceSchema);
