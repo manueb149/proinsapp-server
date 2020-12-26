@@ -11,7 +11,7 @@ exports.getReports = async (req, res) => {
 
 exports.createReport = async (req, res) => {
     try {
-        const { data, dataTrucks, detailSinister, detailSinisterCk, servicesType, servicesTypeCk, selectedDate } = req.body;
+        const { data, dataTrucks, detailSinister, detailSinisterCk, servicesType, servicesTypeCk } = req.body;
 
         const newService = new Service({
             poliza: data.poliza,
