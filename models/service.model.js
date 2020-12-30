@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const moment = require('moment-timezone');
-const dateSD = moment.tz("America/Santo_Domingo");
+const dateSD = moment.tz(Date.now(), "America/Santo_Domingo");
 const Float = require('mongoose-float').loadType(mongoose);
 
 const ServiceSchema =  mongoose.Schema({
