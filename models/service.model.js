@@ -131,7 +131,6 @@ const ServiceSchema =  mongoose.Schema({
     },
     tiempoCliente: {
         type: Number,
-        required: true,
         trim: true,
         uppercase: true
     },
@@ -164,8 +163,8 @@ const ServiceSchema =  mongoose.Schema({
         default: {}
     },
     fechaSiniestro: {
-        type: Object,
-        default: {}
+        type: String,
+        default: ""
     },
     user: {
         type: String,
@@ -175,8 +174,9 @@ const ServiceSchema =  mongoose.Schema({
     },
     registry: {
         type: String,
-        default: moment.tz(Date.now(), "America/Santo_Domingo").toLocaleString('es-DO', { timeZone: 'UTC' })
+        default: ""
+        // default: moment.tz(Date.now(), "America/Santo_Domingo").toLocaleString('es-DO', { timeZone: 'UTC' })
     }
-});
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }});
 ServiceSchema.plugin(AutoIncrement, {inc_field: 'serviceNo', start_seq: 1000000});
 module.exports = mongoose.model('Service', ServiceSchema);

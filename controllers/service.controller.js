@@ -42,6 +42,7 @@ exports.createReport = async (req, res) => {
             detalleSiniestro: { detailSinister, detailSinisterCk },
             tipoServicios: { servicesType, servicesTypeCk },
             fechaSiniestro: data.fechaSiniestro,
+            registry: data.registry,
             user: data.user
 
         });
@@ -56,10 +57,21 @@ exports.createReport = async (req, res) => {
 }
 
 exports.deleteReport = async (req, res) => {
+    const serviceNo = req.params.serviceNo
     try {
+        // Si la tarea existe o no
+        let service = await Service.findOne({ serviceNo })
+
+        if (!service) {
+            return res.status(404).json({ message: 'Servicio no encontrado' });
+        }
+
+        // Eliminar
+        await Service.findOneAndRemove({ serviceNo });
+        res.status(200).send({ message: 'Servicio Eliminado' })
 
     } catch (error) {
-
+        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
 }
 

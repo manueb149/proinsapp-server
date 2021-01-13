@@ -16,9 +16,9 @@ router.post(
     controller.createReport
 );
 
-// /api/service/delete/:id
+// /api/service/delete/:serviceNo
 router.delete(
-    "/delete/:id",
+    "/delete/:serviceNo",
     auth,
     controller.deleteReport
 );
