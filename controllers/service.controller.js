@@ -28,6 +28,8 @@ exports.createReport = async (req, res) => {
             color: data.color,
             aseguradora: data.aseguradora,
             plan: data.plan,
+            infoSin: data.infoSin,
+            estadoV: data.estadoV,
             ubicacion: data.ubicacion,
             destino: data.destino,
             comentarioGruero: data.comentarioGruero,
