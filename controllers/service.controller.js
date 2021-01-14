@@ -78,9 +78,41 @@ exports.deleteReport = async (req, res) => {
 }
 
 exports.updateReport = async (req, res) => {
+    const serviceNo = req.params.serviceNo
+    const { data } = req.body;
     try {
+        let service = await Service.findOne({ serviceNo })
 
+        if (!service) {
+            return res.status(404).json({ message: 'Servicio no encontrado' });
+        }
+
+        const updatedService = {
+            color: data.color,
+            telAseg1: data.telAseg1,
+            telAseg2: data.telAseg2,
+            infoSin: data.infoSin,
+            estadoV: data.estadoV,
+            ubicacion: data.ubicacion,
+            destino: data.destino,
+            fechaSiniestro: data.fechaSiniestro,
+            datosGruero: data.datosGruero,
+            comentarioGruero: data.comentarioGruero,
+            tipoServicios: data.tipoServicios,
+            detalleSiniestro: data.detalleSiniestro,
+            dia: data.dia,
+            noche: data.noche,
+            tiempoGrua: data.tiempoGrua,
+            tiempoCliente: data.tiempoCliente,
+            distancia: data.distancia,
+            precio: data.precio,
+            tarifaEspecial: data.tarifaEspecial
+        }
+
+        service = await Service.findOneAndUpdate({ serviceNo }, updatedService, { new: true })
+
+        res.status(200).send({ message: 'Servicio Actualizado!' });
     } catch (error) {
-
+        res.status(500).send({ message: `Hubo inconvenientes para realizar su petición, Intentelo nuevamente.` });
     }
 }

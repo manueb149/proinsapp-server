@@ -23,9 +23,9 @@ router.delete(
     controller.deleteReport
 );
 
-// /api/service/update/:id
+// /api/service/update/:serviceNo
 router.put(
-    "/update/:id",
+    "/update/:serviceNo",
     auth,
     controller.updateReport
 )
