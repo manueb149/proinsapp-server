@@ -7,9 +7,9 @@ const fs = require('fs');
 exports.getAllData = async (req, res) => {
     try {
         let result;
-        if(req.body.region){
+        if (req.body.region) {
             result = await truckData.find(req.body).exec();
-        }else{
+        } else {
             result = await truckData.find();
         }
         res.status(200).send(result);
@@ -21,13 +21,13 @@ exports.getAllData = async (req, res) => {
 exports.getAreas = async (req, res) => {
     try {
         const truckAreas = await truckArea.findOne({ name: 'areas' });
-        if(truckAreas){
-           return res.status(200).send({ areas: truckAreas.areas }) 
-        }else{
-            return res.status(200).send({ areas: [] }) 
+        if (truckAreas) {
+            return res.status(200).send({ areas: truckAreas.areas })
+        } else {
+            return res.status(200).send({ areas: [] })
         }
     } catch (error) {
-        
+
     }
 }
 
@@ -52,16 +52,15 @@ exports.uploadData = async (req, res) => {
         for (let i = 0; i < wb.length; i++) {
             const wbData = wb[i].data;
             areas.push(String(wb[i].name).trim().toUpperCase());
-            for (let j = 4; j < wbData.length; j++) {
-                if (wbData[j].length > 0) {
-                    if (wbData[j][0] === '*') {
-                        j += 3;
-                    } else if (wb[i].name.toUpperCase() === 'ASISTENCIAS') {
+            //NEW CODE 
+            if (wb[i].name.toUpperCase() === 'ASISTENCIAS') {
+                for (let j = 2; j < wbData.length; j++) {
+                    if (wbData[j].length > 0) {
                         doc.push({
                             region: String(wb[i].name),
                             gruaDeServicio: String(wbData[j][2] || '-'),
                             area: String(wbData[j][1] || '-'),
-                            telOficina: String(wbData[j][3] || '-') ,
+                            telOficina: String(wbData[j][3] || '-'),
                             telCelular: '-',
                             gruero: '-',
                             direccion: '-',
@@ -78,45 +77,105 @@ exports.uploadData = async (req, res) => {
                             idArchivo: truck.id
                         });
                         count++;
-                    } else {
-                        doc.push({
-                            region: wb[i].name,
-                            gruaDeServicio: String(wbData[j][0] || '-'),
-                            area: String(wbData[j][1] || '-'),
-                            telOficina: String(wbData[j][2] || '-'),
-                            telCelular: String(wbData[j][3] || '-'),
-                            gruero: String(wbData[j][4] || '-'),
-                            direccion: String(wbData[j][5] || '-'),
-                            alcance: String(wbData[j][6] || '-'),
-                            contacto: String(wbData[j][7] || '-'),
-                            transferencia: String(wbData[j][8] || '-'),
-                            banco: String(wbData[j][9] || '-'),
-                            tipoCuenta: String(wbData[j][10] || '-'),
-                            numeroCuenta: String(wbData[j][11] || '-'),
-                            nombreCuenta: String(wbData[j][12] || '-'),
-                            cedula: String(wbData[j][13] || '-'),
-                            fechaNacimiento: String(wbData[j][14] || '-'),
-                            trasporteGrua: String(wbData[j][15] || '-'),
-                            idArchivo: truck.id
-                        });
-                        count++;
+                    }
+                }
+            } else {
+                for (let j = 4; j < wbData.length; j++) {
+                    if (wbData[j].length > 0) {
+                        if (wbData[j][0] === '*') {
+                            j += 3;
+                        } else {
+                            doc.push({
+                                region: wb[i].name,
+                                gruaDeServicio: String(wbData[j][0] || '-'),
+                                area: String(wbData[j][1] || '-'),
+                                telOficina: String(wbData[j][2] || '-'),
+                                telCelular: String(wbData[j][3] || '-'),
+                                gruero: String(wbData[j][4] || '-'),
+                                direccion: String(wbData[j][5] || '-'),
+                                alcance: String(wbData[j][6] || '-'),
+                                contacto: String(wbData[j][7] || '-'),
+                                transferencia: String(wbData[j][8] || '-'),
+                                banco: String(wbData[j][9] || '-'),
+                                tipoCuenta: String(wbData[j][10] || '-'),
+                                numeroCuenta: String(wbData[j][11] || '-'),
+                                nombreCuenta: String(wbData[j][12] || '-'),
+                                cedula: String(wbData[j][13] || '-'),
+                                fechaNacimiento: String(wbData[j][14] || '-'),
+                                trasporteGrua: String(wbData[j][15] || '-'),
+                                idArchivo: truck.id
+                            });
+                            count++;
+                        }
                     }
                 }
             }
+            //NEW CODE 
+            // for (let j = 4; j < wbData.length; j++) {
+            //     if (wbData[j].length > 0) {
+            //         if (wbData[j][0] === '*') {
+            //             j += 3;
+            //         } else if (wb[i].name.toUpperCase() === 'ASISTENCIAS') {
+            //             doc.push({
+            //                 region: String(wb[i].name),
+            //                 gruaDeServicio: String(wbData[j][2] || '-'),
+            //                 area: String(wbData[j][1] || '-'),
+            //                 telOficina: String(wbData[j][3] || '-') ,
+            //                 telCelular: '-',
+            //                 gruero: '-',
+            //                 direccion: '-',
+            //                 alcance: String(wbData[j][0] || '-'),
+            //                 contacto: '-',
+            //                 transferencia: '-',
+            //                 banco: '-',
+            //                 tipoCuenta: '-',
+            //                 numeroCuenta: '-',
+            //                 nombreCuenta: '-',
+            //                 cedula: '-',
+            //                 fechaNacimiento: '-',
+            //                 trasporteGrua: '-',
+            //                 idArchivo: truck.id
+            //             });
+            //             count++;
+            //         } else {
+            //             doc.push({
+            //                 region: wb[i].name,
+            //                 gruaDeServicio: String(wbData[j][0] || '-'),
+            //                 area: String(wbData[j][1] || '-'),
+            //                 telOficina: String(wbData[j][2] || '-'),
+            //                 telCelular: String(wbData[j][3] || '-'),
+            //                 gruero: String(wbData[j][4] || '-'),
+            //                 direccion: String(wbData[j][5] || '-'),
+            //                 alcance: String(wbData[j][6] || '-'),
+            //                 contacto: String(wbData[j][7] || '-'),
+            //                 transferencia: String(wbData[j][8] || '-'),
+            //                 banco: String(wbData[j][9] || '-'),
+            //                 tipoCuenta: String(wbData[j][10] || '-'),
+            //                 numeroCuenta: String(wbData[j][11] || '-'),
+            //                 nombreCuenta: String(wbData[j][12] || '-'),
+            //                 cedula: String(wbData[j][13] || '-'),
+            //                 fechaNacimiento: String(wbData[j][14] || '-'),
+            //                 trasporteGrua: String(wbData[j][15] || '-'),
+            //                 idArchivo: truck.id
+            //             });
+            //             count++;
+            //         }
+            //     }
+            // }
         }
         if (doc.length > 0) {
             await truckData.insertMany(doc, { ordered: false })
-            .then(result => {})
-            .catch( err => {
-                return res.status(400).send({
-                    message: `Algo está mal con el archivo, intente cargar los registros nuevamente.`
-                });
-            })
+                .then(result => { })
+                .catch(err => {
+                    return res.status(400).send({
+                        message: `Algo está mal con el archivo, intente cargar los registros nuevamente.`
+                    });
+                })
             let truckAreas = await truckArea.findOne({ name: 'areas' });
-            if(truckAreas){
-               truckAreas.areas = areas;
-               await truckAreas.save();
-            }else{
+            if (truckAreas) {
+                truckAreas.areas = areas;
+                await truckAreas.save();
+            } else {
                 truckAreas = new truckArea({
                     areas: areas
                 })
